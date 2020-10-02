@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "226019633628",
+    "firebase_url": "https://forpet-87af7.firebaseio.com",
+    "project_id": "forpet-87af7",
+    "storage_bucket": "forpet-87af7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226019633628:android:467e92fb5f3f9769e58719",
+        "android_client_info": {
+          "package_name": "com.forpet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226019633628-ll35c6o1ov0frvcc8mp2lcra5tg487j4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNw_Axjr4jePMqsHktbxpo8mYwmb1LdIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226019633628-ll35c6o1ov0frvcc8mp2lcra5tg487j4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -11,18 +11,85 @@ import {
     Keyboard,
     Alert
 } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
+//Redux
+import { connect } from 'react-redux';
+import { loginAction } from '../redux/actions/index';
 
-export default class SignIn extends Component {
+//firebase
+import auth from '@react-native-firebase/auth';
 
-    constructor(props) {
+const SignIn = ({ navigation }) => {
+
+    /* constructor(props) {
         super(props);
         this.state = {
-            username: '',
-            password: ''
+            typeEmail: '',
+            typePassword: '',
+            isValiEmail: true,
+            isValiPassword: true
+        }
+    } */
+
+    const [data, setData] = React.useState({
+        typeEmail: '',
+        typePassword: '',
+        isValeEmail: true,
+        isValiPassword: true
+    })
+
+    const handleValiEmail = (val) => {
+        if (val.trim().length >= 1) {
+            setData({
+                ...data,
+                isValeEmail: true
+            });
+        } else {
+            setData({
+                ...data,
+                isValeEmail: false
+            })
         }
     }
-    render(){
+
+    const handleValiPassword = (val) => {
+        if (val.trim().length >= 1) {
+            setData({
+                ...data,
+                isValiPassword: true
+            });
+        } else {
+            setData({
+                ...data,
+                isValiPassword: false
+            })
+        }
+    }
+
+    const onLogin = () => {
+        if (data.typeEmail === '' || data.typePassword === '') {
+            Alert.alert("Enter Email/Password")
+        } else {
+            auth().signInWithEmailAndPassword(data.typeEmail, data.typePassword)
+                .then(() => {
+                    navigation.navigate("Main");
+                })
+                .catch((error) => {
+                    console.log(`Login fail with error: ${error}`);
+                })
+        }
+    }
+
+    const goSignUp = () => {
+        navigation.navigate("SignUp");
+    }
+
+    const goForgotPassword = () => {
+        navigation.navigate("ForgotPassword");
+    }
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.top}>
@@ -32,39 +99,44 @@ export default class SignIn extends Component {
                 <TouchableWithoutFeedback style={styles.downContainer} onPress={Keyboard.dismiss}>
                     <View style={styles.downContainer}>
                         <TextInput style={styles.textInput}
-                            placeholder="Username"
+                            placeholder="Email"
                             keyboardType='email-address'
                             returnKeyType='next'
                             autoCorrect={false}
-                           // value={username}
-                            onChangeText={(user) => this.setState({ username: user})}
+                            onChangeText={(email) => setData({ ...data, typeEmail: email })}
+                            onEndEditing={(e) => handleValiEmail(e.nativeEvent.text)}
                         />
+                        {data.isValeEmail ? null :
+                            <Animatable.View animation='fadeInLeft' duration={500}>
+                                <Text style={{ color: '#FF0000', fontSize: 14 }}>Enter Email</Text>
+                            </Animatable.View>
+                        }
                         <TextInput style={styles.textInput}
                             placeholder="Password"
                             secureTextEntry
                             autoCorrect={false}
-                           // value={password}
-                            onChangeText={(pass) => this.setState({ password: pass})}
+                            onChangeText={(pass) => setData({ ...data, typePassword: pass })}
+                            onEndEditing={(e) => handleValiPassword(e.nativeEvent.text)}
                         />
+                        {data.isValiPassword ? null :
+                            <Animatable.View animation='fadeInLeft' duration={500}>
+                                <Text style={{ color: '#FF0000', fontSize: 14 }}>Enter Password</Text>
+                            </Animatable.View>
+                        }
                         <View style={{ alignItems: 'flex-end', }}>
-                            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} style={styles.buttonForgot}>
+                            <TouchableOpacity onPress={goForgotPassword}>
                                 <Text>Forgot Password ?</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ alignItems: 'center', paddingTop: 80 }}>
                             <TouchableOpacity style={styles.button}
-                                onPress={() => {
-                                    if(this.state.username == '' || this.state.password == ''){
-                                        Alert.alert("Enter your username or password !");
-                                    }
-                                    this.props.onLogin(this.props.username, this.props.password)
-                                }}>
+                                onPress={onLogin}>
                                 <Text style={{ textAlign: 'center', fontSize: 40, }}>Login</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ justifyContent: 'flex-end', alignItems: 'center', paddingTop: 160 }}>
                             <Text>Don't have an account</Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+                            <TouchableOpacity onPress={goSignUp}>
                                 <Text>Sign Up</Text>
                             </TouchableOpacity>
                         </View>
@@ -73,8 +145,8 @@ export default class SignIn extends Component {
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
-    }
 }
+
 
 
 const styles = StyleSheet.create({
@@ -90,7 +162,7 @@ const styles = StyleSheet.create({
     downContainer: {
         flex: 2,
         paddingHorizontal: 16,
-        backgroundColor: '#ff0000'
+        //backgroundColor: '#ff0000'
     },
     textInput: {
         paddingHorizontal: 20,
@@ -109,3 +181,20 @@ const styles = StyleSheet.create({
     }
 });
 
+export default SignIn;
+
+/*const mapStateToProps = (state) => {
+    return{
+        isLoggedIn: state.authReducer ? state.authReducer : false
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onLogin: (username, password) => {
+            dispatch(loginAction(username, password));
+        }
+    }
+}
+
+export default connect( mapStateToProps, mapDispatchToProps )(SignIn);*/

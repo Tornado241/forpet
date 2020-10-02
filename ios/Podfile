@@ -8,6 +8,8 @@ target 'ForPet' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
   target 'ForPetTests' do
     inherit! :complete
     # Pods for testing
